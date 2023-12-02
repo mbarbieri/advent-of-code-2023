@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import xyz.barbieri.adventofcode.Day02.Game;
 import xyz.barbieri.adventofcode.Day02.Round;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class Day02Test {
@@ -38,4 +40,16 @@ class Day02Test {
         assertThat(new Round(12, 13, 15).isPossible()).isFalse();
     }
 
+    @Test
+    void min_round_possible_in_game() {
+        Game game = new Game(1, List.of(new Round(1, 2, 3), new Round(2, 2, 1)));
+        assertThat(game.minRound()).isEqualTo(new Round(2, 2, 3));
+    }
+
+    @Test
+    void round_power() {
+        assertThat(new Round(1, 2, 3).power()).isEqualTo(6);
+        assertThat(new Round(2, 2, 1).power()).isEqualTo(4);
+        assertThat(new Round(0, 0, 3).power()).isEqualTo(3);
+    }
 }

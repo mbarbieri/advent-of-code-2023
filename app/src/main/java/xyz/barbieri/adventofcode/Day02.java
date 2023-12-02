@@ -13,11 +13,20 @@ public class Day02 {
     }
 
     public static String part1() {
-        return Utils.readLines("day02.txt").stream().map(Day02::parse).filter(Game::isPossible).map(Game::id).reduce(Integer::sum).orElseThrow().toString();
+        return Utils.readLines("day02.txt").stream()
+                .map(Day02::parse)
+                .filter(Game::isPossible)
+                .map(Game::id)
+                .reduce(Integer::sum).
+                orElseThrow().toString();
     }
 
     public static String part2() {
-        return "";
+        return Utils.readLines("day02.txt").stream().map(Day02::parse)
+                .map(Game::minRound)
+                .map(Round::power)
+                .reduce(Integer::sum)
+                .orElseThrow().toString();
     }
 
     public static Game parse(String line) {
@@ -50,6 +59,13 @@ public class Day02 {
         boolean isPossible() {
             return rounds.stream().allMatch(Round::isPossible);
         }
+
+        Round minRound() {
+            return new Round(
+                    rounds.stream().mapToInt(Round::red).max().orElse(0),
+                    rounds.stream().mapToInt(Round::green).max().orElse(0),
+                    rounds.stream().mapToInt(Round::blue).max().orElse(0));
+        }
     }
 
     public record Round(int red, int green, int blue) {
@@ -57,6 +73,9 @@ public class Day02 {
         boolean isPossible() {
             return red <= 12 && green <= 13 && blue <= 14;
         }
-    }
 
+        int power() {
+            return (red != 0 ? red : 1) * (green != 0 ? green : 1) * (blue != 0 ? blue : 1);
+        }
+    }
 }
