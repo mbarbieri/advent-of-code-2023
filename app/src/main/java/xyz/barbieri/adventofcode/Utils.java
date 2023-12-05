@@ -18,4 +18,14 @@ public class Utils {
             throw new RuntimeException(e);
         }
     }
+
+    public static String readFile(String fileName) {
+        ClassLoader classLoader = App.class.getClassLoader();
+        File file = new File(Objects.requireNonNull(classLoader.getResource(fileName)).getFile());
+        try {
+            return FileUtils.readFileToString(file, "UTF-8");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
