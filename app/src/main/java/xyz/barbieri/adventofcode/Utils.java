@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Utils {
 
     public static List<String> readLines(String fileName) {
-        ClassLoader classLoader = App.class.getClassLoader();
+        ClassLoader classLoader = Utils.class.getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource(fileName)).getFile());
         try {
             return FileUtils.readLines(file, "UTF-8");
@@ -20,7 +20,7 @@ public class Utils {
     }
 
     public static String readFile(String fileName) {
-        ClassLoader classLoader = App.class.getClassLoader();
+        ClassLoader classLoader = Utils.class.getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource(fileName)).getFile());
         try {
             return FileUtils.readFileToString(file, "UTF-8");
