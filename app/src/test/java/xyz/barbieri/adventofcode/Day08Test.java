@@ -52,13 +52,13 @@ class Day08Test {
     @Test
     void count_steps() {
         Navigation n = parseInput(test1);
-        assertThat(Day08.countSteps(n)).isEqualTo(2);
+        assertThat(Day08.countStepsPart1(n)).isEqualTo(2);
     }
 
     @Test
     void count_steps_2() {
         Navigation n = parseInput(test2);
-        assertThat(Day08.countSteps(n)).isEqualTo(6);
+        assertThat(Day08.countStepsPart1(n)).isEqualTo(6);
     }
 
     @Test
@@ -70,7 +70,7 @@ class Day08Test {
     @Test
     void count_steps_part2() {
         Navigation n = parseInput(test3);
-        assertThat(Day08.countStepsPart2(n)).isEqualTo(6);
+        assertThat(Day08.countStepsPart2Slow(n)).isEqualTo(6);
     }
 
     @Test

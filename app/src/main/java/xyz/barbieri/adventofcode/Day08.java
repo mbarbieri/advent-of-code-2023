@@ -8,12 +8,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class Day08 {
 
     public static void main(String[] args) {
         String input = Utils.readFile("day08.txt");
-        System.out.println("Part 1: " + countSteps(parseInput(input)));
+        System.out.println("Part 1: " + countStepsPart1(parseInput(input)));
         System.out.println("Part 2: " + countStepsPart2Parallel(parseInput(input)));
     }
 
@@ -31,11 +32,22 @@ public class Day08 {
         return new Navigation(directions, nodes);
     }
 
-    public static Integer countSteps(Navigation navigation) {
+    public static Integer countStepsPart1(Navigation navigation) {
+        return countSteps(navigation, "AAA", (n) -> n.equals("ZZZ"));
+    }
+
+    public static BigInteger countStepsPart2Parallel(Navigation navigation) {
+        List<String> currentNodes = navigation.startingNodes();
+        return currentNodes.stream().parallel()
+                .map(startingNode -> countSteps(navigation, startingNode, (n) -> n.endsWith("Z")))
+                .map(BigInteger::valueOf).reduce(BigInteger.ONE, Day08::lcm);
+    }
+
+    public static Integer countSteps(Navigation navigation, String startingNode, Predicate<String> endingFunction) {
         int steps = 0;
-        String current = "AAA";
+        String current = startingNode;
         int i = 0;
-        while (!current.equals("ZZZ")) {
+        while (!endingFunction.test(current)) {
             Character dir = navigation.directions.get(i);
             if (dir.equals('R')) {
                 current = navigation.nodes().get(current).getRight();
@@ -52,40 +64,13 @@ public class Day08 {
         return steps;
     }
 
-    public static Integer countStepsPart2(Navigation navigation) {
+    public static Integer countStepsPart2Slow(Navigation navigation) {
         int steps = 0;
         List<String> currentNodes = navigation.startingNodes();
         int i = 0;
         while (!areAllEndingNodes(currentNodes)) {
             Character dir = navigation.directions.get(i);
             currentNodes = nextNodes(navigation, currentNodes, dir);
-            if (i < navigation.directions().size() - 1) {
-                i++;
-            } else {
-                i = 0;
-            }
-            steps++;
-            System.out.println(steps);
-        }
-        return steps;
-    }
-
-    public static BigInteger countStepsPart2Parallel(Navigation navigation) {
-        List<String> currentNodes = navigation.startingNodes();
-        return currentNodes.stream().parallel().map(n -> countStepsPart2FromNode(navigation, n)).map(BigInteger::valueOf).reduce(BigInteger.ONE, Day08::lcm);
-    }
-
-    public static Integer countStepsPart2FromNode(Navigation navigation, String node) {
-        int steps = 0;
-        String current = node;
-        int i = 0;
-        while (!current.endsWith("Z")) {
-            Character dir = navigation.directions.get(i);
-            if (dir.equals('R')) {
-                current = navigation.nodes().get(current).getRight();
-            } else {
-                current = navigation.nodes().get(current).getLeft();
-            }
             if (i < navigation.directions().size() - 1) {
                 i++;
             } else {
